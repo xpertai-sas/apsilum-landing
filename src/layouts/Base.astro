@@ -1,0 +1,71 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+}
+
+const { title, description, path = "/" } = Astro.props;
+const app = "https://app.apsilum.com";
+const demo = "/demo/";
+const anio = new Date().getFullYear();
+const nav = [
+  { href: "/la-solucion/", texto: "La solución" },
+  { href: "/resultados/", texto: "Resultados" },
+  { href: "/para-quien/", texto: "Para quién" },
+];
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/logo-mark.svg" />
+    <link rel="canonical" href={`https://apsilum.com${path}`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={`https://apsilum.com${path}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="https://apsilum.com/logo-horizontal.svg" />
+    <meta name="theme-color" content="#0f1417" />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+
+    <header class="top">
+      <div class="wrap top-inner">
+        <a class="brand" href="/" aria-label="APSILUM, inicio">
+          <img src="/logo-horizontal.svg" alt="APSILUM" width="154" height="45" />
+        </a>
+        <nav aria-label="Principal">
+          {nav.map((item) => <a href={item.href}>{item.texto}</a>)}
+        </nav>
+        <div class="top-acciones">
+          <a class="btn btn-line" href={`${app}/auth/login`}>Ingresar</a>
+          <a class="btn btn-solid" href={demo}>Solicitar demo</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <slot />
+    </main>
+
+    <footer class="pie">
+      <div class="wrap pie-inner">
+        <img src="/logo-horizontal.svg" alt="APSILUM" width="132" height="38" />
+        <p>© {anio} XpertAI SAS · Bogotá, Colombia</p>
+        <nav aria-label="Enlaces del pie">
+          <a href={demo}>Solicitar demo</a>
+          <a href={app}>Ingresar</a>
+          <a href="mailto:hola@apsilum.com">hola@apsilum.com</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

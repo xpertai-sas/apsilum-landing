@@ -1,0 +1,73 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const perfiles = [
+  {
+    titulo: "Municipios",
+    problema:
+      "El inventario está repartido entre el operador, el contratista y una base heredada. El CAP llega calculado, sin poder reconstruirlo.",
+    obtiene:
+      "Un expediente propio: el municipio es dueño de su dato, con el CAP y su composición a la vista.",
+  },
+  {
+    titulo: "Interventorías",
+    problema:
+      "Se discute sobre cifras sin trazabilidad. Cada observación exige pedir de nuevo el archivo y volver a cruzar.",
+    obtiene:
+      "Evidencia: procedencia por campo, auditoría de cambios y exclusiones declaradas con motivo.",
+  },
+  {
+    titulo: "Operadores y ESP",
+    problema:
+      "Reportar el AOM y sostener la inversión exige justificar cada peso sin un soporte único.",
+    obtiene:
+      "Una base común con el municipio: lo que se reporta es lo que se audita.",
+  },
+  {
+    titulo: "Consultores",
+    problema:
+      "Cada estudio arranca reconstruyendo el inventario desde cero, con supuestos que nadie puede revisar.",
+    obtiene:
+      "Un modelo de datos y un motor de cálculo que se reutiliza entre municipios, con parámetros versionados.",
+  },
+];
+---
+
+<Base
+  title="Para quién · APSILUM"
+  description="APSILUM está pensado para municipios, interventorías, operadores y consultores del alumbrado público colombiano."
+  path="/para-quien/"
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Para quién</p>
+      <h1>Cuatro actores, un mismo expediente</h1>
+      <p class="lead">
+        El problema del alumbrado público no es de una entidad: es de cuatro que discuten sobre
+        datos distintos. APSILUM les da uno solo.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap bloques">
+      {perfiles.map((p) => (
+        <div class="bloque">
+          <h2>{p.titulo}</h2>
+          <div>
+            <p><strong>Hoy:</strong> {p.problema}</p>
+            <p><strong>Con APSILUM:</strong> {p.obtiene}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap cta-inner">
+      <h2>Si te reconocés en alguno de estos cuatro, hablemos</h2>
+      <p>La demostración se arma con los datos que ya tenés, no con un inventario de ejemplo.</p>
+      <a class="btn btn-solid" href="/demo/">Solicitar una demo</a>
+    </div>
+  </section>
+</Base>

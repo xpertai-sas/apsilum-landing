@@ -1,0 +1,108 @@
+---
+import Base from "../../layouts/Base.astro";
+---
+
+<Base
+  title="La solución · APSILUM"
+  description="Un expediente regulatorio del alumbrado público: inventario con procedencia, diagnóstico de brechas, mapa y CAP calculado con la norma."
+  path="/la-solucion/"
+>
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">La solución</p>
+      <h1>Un expediente, no una planilla</h1>
+      <p class="lead">
+        APSILUM no es un visor de datos. Es el lugar donde el inventario, la norma y la
+        evidencia de la interventoría se encuentran, y donde cada cifra se puede defender.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap bloques">
+      <div class="bloque">
+        <h2>Inventario con procedencia</h2>
+        <div>
+          <p>
+            Cada activo tiene un estado explícito: sin dato, declarado, verificado o
+            inconsistente. El sistema propone correcciones, nunca pisa una verificación humana.
+          </p>
+          <ul>
+            <li>Importación idempotente desde archivo, base legada o API</li>
+            <li>Huella del origen para saber de dónde vino cada carga</li>
+            <li>Diagnóstico de brechas por familia y por motivo</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <h2>Motor de costos CREG</h2>
+        <div>
+          <p>
+            El CAP se calcula con la fórmula del Artículo 7 de la CREG 101 013 de 2022:
+            CSEE + CINV + CAOM + COTR. Los parámetros son datos versionados por período, no
+            constantes escondidas en el código.
+          </p>
+          <ul>
+            <li>Un solo redondeo, al final: la suma cuadra al centavo</li>
+            <li>Indexación con IPP de los componentes que la norma indexa</li>
+            <li>Simulación de escenarios sin persistir resultados</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <h2>Diagnóstico de brechas</h2>
+        <div>
+          <p>
+            Antes de calcular, el sistema dice qué falta. Un activo sin UCAP o sin valor no
+            entra al CAP, y la interfaz lo muestra en vez de esconderlo.
+          </p>
+          <ul>
+            <li>Tres tramos: verificado, estimado y excluido</li>
+            <li>Motivo por activo excluido</li>
+            <li>Reglas de estimación con valor de catálogo, nunca inventado</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <h2>Mapa que no ahoga</h2>
+        <div>
+          <p>
+            La ciudad se muestra agregada por celdas; al acercar se abren los activos, al
+            alejar se ve el territorio. El navegador no descarga cientos de miles de puntos.
+          </p>
+          <ul>
+            <li>Agregación por viewport y zoom</li>
+            <li>Exportación del filtro a CSV y GeoJSON</li>
+            <li>Sin dependencia de tiles propietarios</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bloque">
+        <h2>Aislamiento y auditoría</h2>
+        <div>
+          <p>
+            Cada municipio es un tenant con políticas de seguridad a nivel de base de datos.
+            Todo cambio deja un registro append-only con actor, momento y valor anterior.
+          </p>
+          <ul>
+            <li>RLS forzada en cada tabla con datos de cliente</li>
+            <li>Un municipio ajeno responde 404, nunca 403</li>
+            <li>Auditoría que no se puede editar ni borrar</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap cta-inner">
+      <h2>¿Lo vemos con los datos de tu municipio?</h2>
+      <p>Preparamos una demostración con un inventario real y mostramos dónde están las brechas.</p>
+      <a class="btn btn-solid" href="/demo/">Solicitar una demo</a>
+    </div>
+  </section>
+</Base>
