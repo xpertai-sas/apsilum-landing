@@ -9,7 +9,7 @@ interface Props {
 
 const { title, description, path = "/" } = Astro.props;
 const app = "https://app.apsilum.com";
-const demo = "/demo/";
+const demo = "https://wa.me/573247540069?text=Hola%20XpertAI%2C%20me%20interesa%20contactar%20un%20especialista%20de%20Apsilum.%20%C2%BFPodr%C3%ADamos%20agendar%20una%20cita%3F";
 const anio = new Date().getFullYear();
 const nav = [
   { href: "/la-solucion/", texto: "La solución" },
@@ -47,7 +47,7 @@ const nav = [
         </nav>
         <div class="top-acciones">
           <a class="btn btn-line" href={`${app}/auth/login`}>Ingresar</a>
-          <a class="btn btn-solid" href={demo}>Solicitar demo</a>
+          <a class="btn btn-solid" href={demo} target="_blank" rel="noopener">Solicitar demo</a>
         </div>
       </div>
     </header>
@@ -61,7 +61,7 @@ const nav = [
         <img src="/logo-horizontal.svg" alt="APSILUM" width="132" height="38" />
         <p>© {anio} XpertAI SAS · Bogotá, Colombia</p>
         <nav aria-label="Enlaces del pie">
-          <a href={demo}>Solicitar demo</a>
+          <a href={demo} target="_blank" rel="noopener">Solicitar demo</a>
           <a href={app}>Ingresar</a>
           <a href="mailto:hola@apsilum.com">hola@apsilum.com</a>
         </nav>

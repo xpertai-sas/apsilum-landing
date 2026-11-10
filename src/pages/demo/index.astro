@@ -1,53 +1,45 @@
 ---
 import Base from "../../layouts/Base.astro";
+
+const WA =
+  "https://wa.me/573247540069?text=Hola%20XpertAI%2C%20me%20interesa%20contactar%20un%20especialista%20de%20Apsilum.%20%C2%BFPodr%C3%ADamos%20agendar%20una%20cita%3F";
 ---
 
 <Base
   title="Solicitar una demo · APSILUM"
-  description="Pedí una demostración de APSILUM con el inventario de tu municipio."
+  description="Coordiná una demostración de APSILUM con un especialista de XpertAI por WhatsApp."
   path="/demo/"
 >
   <section class="page-hero">
     <div class="wrap">
       <p class="eyebrow">Solicitar una demo</p>
-      <h1>Traé tu inventario. Nosotros lo hacemos defendible.</h1>
+      <h1>Hablemos por WhatsApp</h1>
       <p class="lead">
-        La demostración usa los datos de tu municipio, no un ejemplo. Contanos qué tenés y
-        coordinamos una sesión de 30 minutos.
+        Un especialista de XpertAI te responde y coordinamos una sesión de 30 minutos con el
+        inventario de tu municipio.
       </p>
+      <div class="acciones">
+        <a class="btn btn-solid" href={WA} target="_blank" rel="noopener">
+          Escribir por WhatsApp
+        </a>
+        <a class="btn btn-line" href="mailto:hola@apsilum.com">Escribir por correo</a>
+      </div>
     </div>
   </section>
 
   <section>
-    <div class="wrap">
-      <form
-        class="form"
-        method="post"
-        action="mailto:hola@apsilum.com?subject=Solicitud%20de%20demo%20APSILUM"
-        enctype="text/plain"
-      >
-        <label>
-          Nombre y apellido
-          <input type="text" name="nombre" required autocomplete="name" />
-        </label>
-        <label>
-          Entidad o empresa
-          <input type="text" name="entidad" required autocomplete="organization" />
-        </label>
-        <label>
-          Correo
-          <input type="email" name="correo" required autocomplete="email" />
-        </label>
-        <label>
-          Qué necesitás contar (opcional)
-          <textarea name="mensaje" rows="4"></textarea>
-        </label>
-        <button class="btn btn-solid" type="submit">Enviar solicitud</button>
-        <p class="nota">
-          El formulario abre tu cliente de correo. Si preferís, escribí directo a
-          <a href="mailto:hola@apsilum.com">hola@apsilum.com</a>.
-        </p>
-      </form>
+    <div class="wrap bloques">
+      <div class="bloque">
+        <h2>Cómo es la sesión</h2>
+        <div>
+          <ul>
+            <li>30 minutos, sin instalar nada.</li>
+            <li>Se revisa el inventario que ya tenés, no un ejemplo.</li>
+            <li>Se muestran las brechas y el CAP de esa corrida.</li>
+            <li>Si hay interés, se acuerda el piloto con la entidad.</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 </Base>

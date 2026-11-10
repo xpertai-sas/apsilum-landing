@@ -1,111 +1,79 @@
 ---
 import Base from "../../layouts/Base.astro";
 
-const activos = [
-  ["Luminarias", "354.732"],
-  ["Soportes", "423.095"],
-  ["Bombillas", "93.816"],
-  ["Transformadores", "16.259"],
-  ["Circuitos", "21"],
-  ["Total de activos", "887.923"],
+const capacidades = [
+  [
+    "Cumplimiento normativo",
+    "El expediente se arma con la resolución vigente, no con una plantilla: parámetros por período, artículos citados y un CAP que se puede reconstruir componente por componente.",
+  ],
+  [
+    "Inventario con procedencia",
+    "Cada activo declara si el dato es declarado, verificado o inconsistente. El sistema propone correcciones y no pisa una verificación humana.",
+  ],
+  [
+    "Brechas visibles",
+    "Lo que no se puede costear se muestra con su motivo. Ningún activo queda fuera del CAP sin que el municipio lo sepa.",
+  ],
+  [
+    "Analítica y reportes",
+    "Informes para entes de control y para la interventoría, con trazabilidad de cada cambio y sin reconstruir el dato a mano.",
+  ],
 ];
 
-const tramos = [
-  ["Verificados: entran al CAP", "354.735"],
-  ["Sin UCAP: excluidos con motivo", "439.372"],
-  ["Sin valor de UCAP: excluidos", "93.816"],
+const cualidades = [
+  ["Escala", "Diseñado para inventarios metropolitanos: el cálculo se resuelve en una consulta agregada, no iterando activo por activo."],
+  ["Exactitud", "Dinero con decimal exacto y un solo redondeo al final: la suma de los componentes coincide con el CAP."],
+  ["Trazabilidad", "Auditoría append-only de cada cambio de dato o de procedencia, con actor y momento."],
 ];
 ---
 
 <Base
   title="Resultados · APSILUM"
-  description="Qué produce APSILUM sobre un inventario real: diagnóstico de brechas, CAP calculado en 1,2 segundos y exclusiones declaradas."
+  description="Qué produce APSILUM sobre un inventario real: cumplimiento normativo, brechas visibles y un CAP auditable."
   path="/resultados/"
 >
   <section class="page-hero">
     <div class="wrap">
       <p class="eyebrow">Resultados</p>
-      <h1>Lo que pasa cuando el inventario se puede procesar</h1>
+      <h1>Lo que cambia cuando el inventario se puede procesar</h1>
       <p class="lead">
-        Sobre el inventario de un municipio de 354.732 luminarias, el sistema carga,
-        diagnostica y calcula el CAP en 1,2 segundos. Estos son los números de esa corrida.
+        El resultado no es un tablero más: es un expediente que resiste la revisión de un ente
+        de control y de una interventoría.
       </p>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <h2>El inventario procesado</h2>
-      <table class="tabla-cifras">
-        <thead>
-          <tr><th>Familia</th><th>Activos</th></tr>
-        </thead>
-        <tbody>
-          {activos.map(([familia, valor]) => (
-            <tr><td>{familia}</td><td>{valor}</td></tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section>
-    <div class="wrap">
-      <h2>Qué entra al CAP y qué no</h2>
-      <p class="lead-small">
-        La cifra no se presenta sola: viene con su composición. Los activos sin UCAP o sin
-        valor quedan fuera con el motivo declarado.
-      </p>
-      <table class="tabla-cifras">
-        <thead>
-          <tr><th>Tramo</th><th>Activos</th></tr>
-        </thead>
-        <tbody>
-          {tramos.map(([tramo, valor]) => (
-            <tr><td>{tramo}</td><td>{valor}</td></tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   </section>
 
   <section>
     <div class="wrap bloques">
-      <div class="bloque">
-        <h2>1,2 segundos</h2>
-        <div>
-          <p>
-            El cálculo del CAP se resuelve en una consulta agregada, no iterando activo por
-            activo en memoria. El mismo motor corre en la API, en la CLI y en cualquier cliente.
-          </p>
+      {capacidades.map(([titulo, texto]) => (
+        <div class="bloque">
+          <h2>{titulo}</h2>
+          <div><p>{texto}</p></div>
         </div>
-      </div>
-      <div class="bloque">
-        <h2>Al centavo</h2>
-        <div>
-          <p>
-            La suma de los cuatro componentes coincide con el CAP total. Es una condición de
-            aceptación del motor, no una casualidad.
-          </p>
+      ))}
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap bloques">
+      {cualidades.map(([titulo, texto]) => (
+        <div class="bloque">
+          <h2>{titulo}</h2>
+          <div><p>{texto}</p></div>
         </div>
-      </div>
-      <div class="bloque">
-        <h2>Lo que no se pelea más</h2>
-        <div>
-          <p>
-            La discusión con la interventoría deja de ser sobre qué dice el dato y pasa a ser
-            sobre la decisión: qué activo priorizar, qué contrato ajustar, qué medir.
-          </p>
-        </div>
-      </div>
+      ))}
     </div>
   </section>
 
   <section class="cta">
     <div class="wrap cta-inner">
-      <h2>Probalo con tu inventario</h2>
-      <p>Si tenés el inventario en una hoja de cálculo, una base o un archivo del contratista, se puede cargar.</p>
-      <a class="btn btn-solid" href="/demo/">Solicitar una demo</a>
+      <h2>¿Lo vemos con los datos de tu municipio?</h2>
+      <p>La demostración se arma con el inventario que ya tenés, no con un ejemplo.</p>
+      <a
+        class="btn btn-solid"
+        href="https://wa.me/573247540069?text=Hola%20XpertAI%2C%20me%20interesa%20contactar%20un%20especialista%20de%20Apsilum.%20%C2%BFPodr%C3%ADamos%20agendar%20una%20cita%3F"
+        target="_blank"
+        rel="noopener">Solicitar una demo</a>
     </div>
   </section>
 </Base>
