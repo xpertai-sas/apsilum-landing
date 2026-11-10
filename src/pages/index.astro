@@ -1,0 +1,746 @@
+---
+const anio = new Date().getFullYear();
+const app = "https://app.apsilum.com";
+
+const modulos = [
+  {
+    n: "01",
+    titulo: "Expediente",
+    texto:
+      "El estado regulatorio del municipio en una pantalla: qué falta, qué está vencido y qué depende de quién. Sin hojas de cálculo paralelas.",
+    puntos: ["Estado por obligación", "Responsable y plazo", "Historial de cambios"],
+  },
+  {
+    n: "02",
+    titulo: "Inventario",
+    texto:
+      "Cada luminaria, soporte, transformador y circuito con su valor UCAP y su procedencia: declarado, verificado o inconsistente.",
+    puntos: ["887.923 activos reales", "Procedencia por campo", "Diagnóstico de brechas SIAP"],
+  },
+  {
+    n: "03",
+    titulo: "Mapa",
+    texto:
+      "La ciudad agregada por celdas para que el detalle no ahogue: al acercar se abren los activos, al alejar se ve el territorio.",
+    puntos: ["Agregación por viewport", "Sin cargar el inventario entero", "Exportación a CSV y GeoJSON"],
+  },
+  {
+    n: "04",
+    titulo: "Costos",
+    texto:
+      "El CAP del período con sus cuatro componentes y el artículo que lo sustenta. Y, al lado, lo que quedó fuera y por qué.",
+    puntos: ["CSEE, CINV, CAOM y COTR", "Tres tramos explícitos", "Simulación sin persistir"],
+  },
+];
+
+const pasos = [
+  {
+    titulo: "Cargar",
+    texto:
+      "Se importa el inventario tal como está: archivo, base legada o API. Se conserva la huella del origen para que la carga sea idempotente.",
+  },
+  {
+    titulo: "Diagnosticar",
+    texto:
+      "El sistema dice qué datos faltan, qué no cuadra y qué se contradice. Propone; nunca pisa una verificación humana.",
+  },
+  {
+    titulo: "Decidir",
+    texto:
+      "Con el CAP y las brechas a la vista, la discusión con la interventoría deja de ser sobre el dato y pasa a ser sobre la decisión.",
+  },
+];
+
+const garantias = [
+  {
+    titulo: "Aislamiento por municipio",
+    texto:
+      "Cada fila vive bajo una política de seguridad a nivel de base de datos. Un municipio no puede ver ni sospechar la existencia de otro: recibe 404, nunca 403.",
+  },
+  {
+    titulo: "Auditoría que no se edita",
+    texto:
+      "Todo cambio de dato o de procedencia deja un registro append-only con actor, momento y valor anterior.",
+  },
+  {
+    titulo: "Procedencia explícita",
+    texto:
+      "Sin dato, declarado, verificado o inconsistente. La interfaz nunca muestra un valor sin decir de dónde salió.",
+  },
+  {
+    titulo: "Dinero sin float",
+    texto:
+      "Cálculo con decimal exacto y un solo redondeo al final. El CAP y la suma de sus componentes cuadran al centavo.",
+  },
+];
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>APSILUM · El expediente del alumbrado público</title>
+    <meta
+      name="description"
+      content="APSILUM convierte el inventario y la regulación del alumbrado público en un expediente auditable: diagnóstico, mapa y CAP según la CREG 101 013 de 2022."
+    />
+    <link rel="icon" type="image/svg+xml" href="/logo-mark.svg" />
+    <link rel="canonical" href="https://apsilum.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://apsilum.com/" />
+    <meta property="og:title" content="APSILUM · El expediente del alumbrado público" />
+    <meta
+      property="og:description"
+      content="Inventario, diagnóstico, mapa y CAP del alumbrado público en un solo expediente auditable."
+    />
+    <meta property="og:image" content="https://apsilum.com/logo-horizontal.svg" />
+    <meta name="theme-color" content="#0f1417" />
+  </head>
+  <body>
+    <a class="skip" href="#contenido">Saltar al contenido</a>
+
+    <header class="top">
+      <div class="wrap top-inner">
+        <a class="brand" href="/" aria-label="APSILUM, inicio">
+          <img src="/logo-horizontal.svg" alt="APSILUM" width="154" height="45" />
+        </a>
+        <nav aria-label="Principal">
+          <a href="#producto">Producto</a>
+          <a href="#como">Cómo funciona</a>
+          <a href="#regulacion">Regulación</a>
+          <a href="#confianza">Seguridad</a>
+        </nav>
+        <a class="btn btn-solid" href={`${app}/auth/login`}>Entrar</a>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <section class="hero">
+        <div class="wrap">
+          <p class="eyebrow">Alumbrado público · CREG 101 013 de 2022</p>
+          <h1>
+            Datos que iluminan.<br />
+            <span>Decisiones que transforman.</span>
+          </h1>
+          <p class="lead">
+            El expediente regulatorio del alumbrado público, en un solo lugar: el inventario con su
+            procedencia, el diagnóstico de lo que falta y el <abbr title="Costo de prestación del servicio">CAP</abbr>
+            calculado con la norma, no con una planilla.
+          </p>
+          <div class="acciones">
+            <a class="btn btn-solid" href={`${app}/auth/login`}>Entrar al producto</a>
+            <a class="btn btn-line" href="#producto">Ver qué hace</a>
+          </div>
+          <p class="nota">Demostración sobre Bogotá D.C. · datos de su operación</p>
+
+          <dl class="cifras">
+            <div>
+              <dt>Activos procesados</dt>
+              <dd>887.923</dd>
+            </div>
+            <div>
+              <dt>Luminarias</dt>
+              <dd>354.732</dd>
+            </div>
+            <div>
+              <dt>Cálculo del CAP</dt>
+              <dd>1,2 s</dd>
+            </div>
+            <div>
+              <dt>Localidades</dt>
+              <dd>20</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="problema" aria-labelledby="problema-titulo">
+        <div class="wrap">
+          <h2 id="problema-titulo">La era de administrar ciudades con hojas de cálculo está por terminar.</h2>
+          <div class="tres">
+            <article class="card">
+              <h3>El inventario vive en tres lugares</h3>
+              <p>
+                Una base heredada, un archivo del contratista y una carpeta compartida. Nadie sabe
+                cuál manda, y la diferencia se descubre en la interventoría.
+              </p>
+            </article>
+            <article class="card">
+              <h3>El CAP no se puede reconstruir</h3>
+              <p>
+                Se conoce el total, no cómo se llegó a él. Sin el detalle por componente y por
+                artículo, cualquier discusión es una opinión.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Lo que falta no se ve</h3>
+              <p>
+                Cientos de miles de activos sin UCAP o sin valor quedan fuera del cálculo y nadie
+                lo dice. El número sale, pero está incompleto.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="producto" class="producto" aria-labelledby="producto-titulo">
+        <div class="wrap">
+          <p class="eyebrow">El producto</p>
+          <h2 id="producto-titulo">Cuatro piezas que sostienen una decisión</h2>
+          <div class="grid-modulos">
+            {
+              modulos.map((m) => (
+                <article class="modulo">
+                  <span class="num">{m.n}</span>
+                  <h3>{m.titulo}</h3>
+                  <p>{m.texto}</p>
+                  <ul>
+                    {m.puntos.map((p) => (
+                      <li>{p}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section id="como" class="como" aria-labelledby="como-titulo">
+        <div class="wrap">
+          <h2 id="como-titulo">Cómo funciona</h2>
+          <ol class="pasos">
+            {
+              pasos.map((p, i) => (
+                <li>
+                  <span class="paso">{i + 1}</span>
+                  <h3>{p.titulo}</h3>
+                  <p>{p.texto}</p>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </section>
+
+      <section id="regulacion" class="regulacion" aria-labelledby="regulacion-titulo">
+        <div class="wrap reg-inner">
+          <div>
+            <p class="eyebrow">La norma, citada</p>
+            <h2 id="regulacion-titulo">Sin artículos, no hay expediente</h2>
+            <p class="lead-small">
+              Cada cifra del producto apunta al artículo que la sustenta. La resolución no se
+              interpreta de memoria ni se esconde en el código: los parámetros son datos
+              versionados por período.
+            </p>
+          </div>
+          <dl class="articulos">
+            <div>
+              <dt>Art. 7</dt>
+              <dd>CAP = CSEE + CINV + CAOM + COTR</dd>
+            </div>
+            <div>
+              <dt>Arts. 41–42</dt>
+              <dd>Indexación de la inversión y del AOM con el IPP</dd>
+            </div>
+            <div>
+              <dt>Aforo</dt>
+              <dd>Consumo por nivel y clase de vía, separado del inventario</dd>
+            </div>
+            <div>
+              <dt>Procedencia</dt>
+              <dd>Sin dato · declarado · verificado · inconsistente</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section id="confianza" class="confianza" aria-labelledby="confianza-titulo">
+        <div class="wrap">
+          <h2 id="confianza-titulo">Lo que no se negocia</h2>
+          <div class="grid-garantias">
+            {
+              garantias.map((g) => (
+                <article>
+                  <h3>{g.titulo}</h3>
+                  <p>{g.texto}</p>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="wrap cta-inner">
+          <h2>El municipio es dueño de su dato. Nosotros lo hacemos defendible.</h2>
+          <p>
+            APSILUM es una plataforma de XpertAI SAS para entidades públicas y sus interventorías.
+          </p>
+          <a class="btn btn-solid" href={`${app}/auth/login`}>Entrar al producto</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="pie">
+      <div class="wrap pie-inner">
+        <img src="/logo-horizontal.svg" alt="APSILUM" width="132" height="38" />
+        <p>© {anio} XpertAI SAS · Bogotá, Colombia</p>
+        <nav aria-label="Enlaces del pie">
+          <a href={app}>Aplicación</a>
+          <a href="mailto:hola@apsilum.com">hola@apsilum.com</a>
+        </nav>
+      </div>
+    </footer>
+
+    <style is:global>
+      :root {
+        --bg: #0f1417;
+        --surface: #151c21;
+        --surface-2: #1a232a;
+        --line: #24303a;
+        --text: #e8eef2;
+        --muted: #93a4b0;
+        --accent: #ffc107;
+        --accent-ink: #263238;
+        --radio: 14px;
+        --wrap: 1120px;
+        --font: "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        font-size: 17px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .wrap {
+        width: min(100% - 48px, var(--wrap));
+        margin-inline: auto;
+      }
+
+      .skip {
+        position: absolute;
+        left: -9999px;
+      }
+      .skip:focus {
+        left: 16px;
+        top: 16px;
+        background: var(--accent);
+        color: var(--accent-ink);
+        padding: 10px 16px;
+        border-radius: 8px;
+        z-index: 10;
+      }
+
+      .top {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: color-mix(in srgb, var(--bg) 88%, transparent);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--line);
+      }
+      .top-inner {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        padding: 14px 0;
+      }
+      .brand img {
+        display: block;
+        filter: brightness(0) invert(1);
+        opacity: 0.95;
+      }
+      .top nav {
+        display: flex;
+        gap: 22px;
+        margin-left: auto;
+        font-size: 14px;
+      }
+      .top nav a {
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .top nav a:hover {
+        color: var(--text);
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 12px 22px;
+        border-radius: 999px;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      }
+      .btn-solid {
+        background: var(--accent);
+        color: var(--accent-ink);
+      }
+      .btn-solid:hover {
+        transform: translateY(-1px);
+        background: #ffd04d;
+      }
+      .btn-line {
+        border: 1px solid var(--line);
+        color: var(--text);
+      }
+      .btn-line:hover {
+        border-color: var(--muted);
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .hero {
+        position: relative;
+        padding: clamp(64px, 11vw, 128px) 0 64px;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: -20% 0 auto 50%;
+        width: 900px;
+        height: 900px;
+        translate: -50% 0;
+        background: radial-gradient(circle, rgba(255, 193, 7, 0.16), transparent 62%);
+        pointer-events: none;
+      }
+      .hero h1 {
+        position: relative;
+        margin: 0;
+        font-size: clamp(2.6rem, 6.2vw, 4.8rem);
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+        font-weight: 700;
+      }
+      .hero h1 span {
+        color: var(--muted);
+      }
+      .lead {
+        position: relative;
+        max-width: 60ch;
+        margin: 26px 0 0;
+        font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+        color: var(--muted);
+      }
+      .acciones {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 34px;
+      }
+      .nota {
+        margin: 18px 0 0;
+        font-size: 13px;
+        color: color-mix(in srgb, var(--muted) 80%, transparent);
+      }
+
+      .cifras {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1px;
+        margin: 64px 0 0;
+        background: var(--line);
+        border: 1px solid var(--line);
+        border-radius: var(--radio);
+        overflow: hidden;
+      }
+      .cifras div {
+        background: var(--surface);
+        padding: 22px 20px;
+      }
+      .cifras dt {
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .cifras dd {
+        margin: 6px 0 0;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+      }
+
+      section {
+        padding: clamp(56px, 9vw, 104px) 0;
+        border-top: 1px solid var(--line);
+      }
+      h2 {
+        margin: 0 0 40px;
+        font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        max-width: 24ch;
+      }
+      h3 {
+        margin: 0 0 10px;
+        font-size: 1.15rem;
+        letter-spacing: -0.01em;
+      }
+      p {
+        margin: 0 0 12px;
+      }
+
+      .tres {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radio);
+        padding: 26px 24px;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 15.5px;
+      }
+
+      .grid-modulos {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .modulo {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radio);
+        padding: 28px 26px;
+        transition: border-color 0.2s ease, background 0.2s ease;
+      }
+      .modulo:hover {
+        border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+        background: var(--surface-2);
+      }
+      .modulo .num {
+        display: inline-block;
+        margin-bottom: 14px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: var(--accent);
+      }
+      .modulo p {
+        color: var(--muted);
+        font-size: 15.5px;
+      }
+      .modulo ul {
+        margin: 16px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 8px;
+      }
+      .modulo li {
+        position: relative;
+        padding-left: 18px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .modulo li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 7px;
+        height: 7px;
+        border-radius: 2px;
+        background: var(--accent);
+      }
+
+      .pasos {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: paso;
+      }
+      .pasos li {
+        border-top: 2px solid var(--line);
+        padding-top: 20px;
+      }
+      .paso {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 14px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--accent-ink);
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .pasos p {
+        color: var(--muted);
+        font-size: 15.5px;
+      }
+
+      .reg-inner {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 48px;
+        align-items: start;
+      }
+      .lead-small {
+        color: var(--muted);
+        max-width: 52ch;
+      }
+      .articulos {
+        margin: 0;
+        display: grid;
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        border-radius: var(--radio);
+        overflow: hidden;
+      }
+      .articulos div {
+        background: var(--surface);
+        padding: 18px 20px;
+      }
+      .articulos dt {
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .articulos dd {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .grid-garantias {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .grid-garantias article {
+        border-left: 2px solid var(--accent);
+        padding: 6px 0 6px 20px;
+      }
+      .grid-garantias p {
+        color: var(--muted);
+        font-size: 15.5px;
+      }
+
+      .cta {
+        background: linear-gradient(180deg, var(--surface), var(--bg));
+        text-align: center;
+      }
+      .cta h2 {
+        margin-inline: auto;
+        max-width: 26ch;
+      }
+      .cta p {
+        color: var(--muted);
+        max-width: 56ch;
+        margin: 0 auto 28px;
+      }
+
+      .pie {
+        border-top: 1px solid var(--line);
+        padding: 30px 0;
+      }
+      .pie-inner {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .pie img {
+        filter: brightness(0) invert(1);
+        opacity: 0.7;
+      }
+      .pie nav {
+        margin-left: auto;
+        display: flex;
+        gap: 20px;
+      }
+      .pie a {
+        text-decoration: none;
+      }
+      .pie a:hover {
+        color: var(--text);
+      }
+
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+
+      @media (max-width: 900px) {
+        .tres,
+        .grid-modulos,
+        .pasos,
+        .grid-garantias,
+        .reg-inner {
+          grid-template-columns: 1fr;
+        }
+        .cifras {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .top nav {
+          display: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </body>
+</html>
