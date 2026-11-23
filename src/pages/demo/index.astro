@@ -3,43 +3,137 @@ import Base from "../../layouts/Base.astro";
 
 const WA =
   "https://wa.me/573247540069?text=Hola%20XpertAI%2C%20me%20interesa%20contactar%20un%20especialista%20de%20Apsilum.%20%C2%BFPodr%C3%ADamos%20agendar%20una%20cita%3F";
+const API = "https://app.apsilum.com/v1/publico/solicitudes";
 ---
 
 <Base
   title="Solicitar una demo · APSILUM"
-  description="Coordiná una demostración de APSILUM con un especialista de XpertAI por WhatsApp."
+  description="Dejanos tus datos y un especialista de XpertAI coordina una demostración de APSILUM con el inventario de tu municipio."
   path="/demo/"
 >
   <section class="page-hero">
     <div class="wrap">
       <p class="eyebrow">Solicitar una demo</p>
-      <h1>Hablemos por WhatsApp</h1>
+      <h1>Contanos de tu municipio</h1>
       <p class="lead">
-        Un especialista de XpertAI te responde y coordinamos una sesión de 30 minutos con el
-        inventario de tu municipio.
+        Dejanos los datos y un especialista de XpertAI te escribe para coordinar una sesión de
+        30 minutos con el inventario real de tu entidad. No hace falta instalar nada.
       </p>
-      <div class="acciones">
-        <a class="btn btn-solid" href={WA} target="_blank" rel="noopener">
-          Escribir por WhatsApp
-        </a>
-        <a class="btn btn-line" href="mailto:hola@apsilum.com">Escribir por correo</a>
-      </div>
     </div>
   </section>
 
   <section>
-    <div class="wrap bloques">
-      <div class="bloque">
-        <h2>Cómo es la sesión</h2>
-        <div>
-          <ul>
-            <li>30 minutos, sin instalar nada.</li>
-            <li>Se revisa el inventario que ya tenés, no un ejemplo.</li>
-            <li>Se muestran las brechas y el CAP de esa corrida.</li>
-            <li>Si hay interés, se acuerda el piloto con la entidad.</li>
-          </ul>
+    <div class="wrap demo-grid">
+      <form class="form" id="solicitud" novalidate>
+        <label>
+          Nombre y apellido
+          <input name="nombre" type="text" autocomplete="name" required minlength="2" />
+        </label>
+        <label>
+          Entidad o municipio
+          <input name="entidad" type="text" autocomplete="organization" />
+        </label>
+        <label>
+          Cargo
+          <input name="cargo" type="text" autocomplete="organization-title" />
+        </label>
+        <label>
+          Correo
+          <input name="email" type="email" autocomplete="email" required />
+        </label>
+        <label>
+          Teléfono
+          <input name="telefono" type="tel" autocomplete="tel" />
+        </label>
+        <label>
+          ¿Qué necesitás resolver?
+          <textarea name="mensaje" rows="4"></textarea>
+        </label>
+
+        <!-- Honeypot: invisible para una persona, tentador para un bot. -->
+        <div class="oculto" aria-hidden="true">
+          <label>Sitio web <input name="sitio_web" type="text" tabindex="-1" autocomplete="off" /></label>
         </div>
-      </div>
+
+        <label class="check">
+          <input name="consentimiento" type="checkbox" required />
+          <span>
+            Autorizo el tratamiento de mis datos para que XpertAI me contacte, conforme a la
+            Ley 1581 de 2012.
+          </span>
+        </label>
+
+        <button class="btn btn-solid" type="submit" id="enviar">Enviar solicitud</button>
+        <p class="form-estado" id="estado" role="status" aria-live="polite"></p>
+      </form>
+
+      <aside class="demo-lado">
+        <h2>Cómo es la sesión</h2>
+        <ul>
+          <li>30 minutos, sin instalar nada.</li>
+          <li>Se revisa el inventario que ya tenés, no un ejemplo.</li>
+          <li>Se muestran las brechas y el CAP de esa corrida.</li>
+          <li>Si hay interés, se acuerda el piloto con la entidad.</li>
+        </ul>
+        <p class="lead">¿Preferís escribirnos directo?</p>
+        <a class="btn btn-line" href={WA} target="_blank" rel="noopener">Escribir por WhatsApp</a>
+        <p class="nota">
+          O por correo a <a href="mailto:info@apsilum.com">info@apsilum.com</a>.
+        </p>
+      </aside>
     </div>
   </section>
 </Base>
+
+<script define:vars={{ API }}>
+  const formulario = document.getElementById("solicitud");
+  const estado = document.getElementById("estado");
+  const boton = document.getElementById("enviar");
+
+  formulario?.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+    const datos = new FormData(formulario);
+
+    if (!datos.get("consentimiento")) {
+      estado.textContent = "Necesitamos tu autorización para tratar los datos.";
+      estado.dataset.tipo = "error";
+      return;
+    }
+
+    boton.disabled = true;
+    boton.textContent = "Enviando…";
+    estado.textContent = "";
+    delete estado.dataset.tipo;
+
+    try {
+      const respuesta = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: datos.get("nombre"),
+          entidad: datos.get("entidad") || null,
+          cargo: datos.get("cargo") || null,
+          email: datos.get("email"),
+          telefono: datos.get("telefono") || null,
+          mensaje: datos.get("mensaje") || null,
+          consentimiento: true,
+          sitio_web: datos.get("sitio_web") || "",
+        }),
+      });
+
+      if (!respuesta.ok) throw new Error(String(respuesta.status));
+
+      formulario.reset();
+      estado.textContent =
+        "Listo. Te escribimos a ese correo para coordinar la sesión. Revisá también la bandeja de spam.";
+      estado.dataset.tipo = "ok";
+      boton.textContent = "Enviado";
+    } catch {
+      estado.textContent =
+        "No pudimos enviar la solicitud. Probá de nuevo o escribinos a info@apsilum.com.";
+      estado.dataset.tipo = "error";
+      boton.disabled = false;
+      boton.textContent = "Enviar solicitud";
+    }
+  });
+</script>
