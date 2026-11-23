@@ -9,12 +9,37 @@ interface Props {
 
 const { title, description, path = "/" } = Astro.props;
 const app = "https://app.apsilum.com";
-const demo = "https://wa.me/573247540069?text=Hola%20XpertAI%2C%20me%20interesa%20contactar%20un%20especialista%20de%20Apsilum.%20%C2%BFPodr%C3%ADamos%20agendar%20una%20cita%3F";
+const wa = "https://wa.me/573247540069?text=Hola%20XpertAI%2C%20me%20interesa%20contactar%20un%20especialista%20de%20Apsilum.%20%C2%BFPodr%C3%ADamos%20agendar%20una%20cita%3F";
+const demo = "/demo/";
 const anio = new Date().getFullYear();
 const nav = [
   { href: "/la-solucion/", texto: "La solución" },
   { href: "/resultados/", texto: "Resultados" },
   { href: "/para-quien/", texto: "Para quién" },
+];
+// Un solo lugar para los enlaces del pie: el mismo criterio que el sitio corporativo.
+const producto = [
+  { href: "/la-solucion/", texto: "La solución" },
+  { href: "/para-quien/", texto: "Para quién" },
+  { href: "/resultados/", texto: "Resultados" },
+  { href: demo, texto: "Solicitar demo" },
+];
+const acceso = [
+  { href: `${app}/auth/login`, texto: "Ingresar" },
+  { href: "mailto:info@apsilum.com", texto: "info@apsilum.com" },
+  { href: "mailto:hola@apsilum.com", texto: "hola@apsilum.com" },
+];
+const corporativo = [
+  { href: "https://www.wearexpertai.com/", texto: "XpertAI" },
+  { href: "https://www.wearexpertai.com/soluciones/apsilum/", texto: "APSILUM en XpertAI" },
+  { href: "https://www.wearexpertai.com/contacto/", texto: "Contacto" },
+  { href: "https://www.wearexpertai.com/privacidad/", texto: "Privacidad y cookies" },
+];
+const redes = [
+  { href: "https://www.linkedin.com/company/we-are-xpert-ai", red: "LinkedIn", icono: "in" },
+  { href: "https://www.instagram.com/xpert.ai/", red: "Instagram", icono: "ig" },
+  { href: "https://www.facebook.com/xpertai", red: "Facebook", icono: "fb" },
+  { href: wa, red: "WhatsApp", icono: "wa" },
 ];
 ---
 
@@ -49,7 +74,7 @@ const nav = [
         </nav>
         <div class="top-acciones">
           <a class="btn btn-line" href={`${app}/auth/login`}>Ingresar</a>
-          <a class="btn btn-solid" href={demo} target="_blank" rel="noopener">Solicitar demo</a>
+          <a class="btn btn-solid" href={demo}>Solicitar demo</a>
         </div>
       </div>
     </header>
@@ -59,14 +84,45 @@ const nav = [
     </main>
 
     <footer class="pie">
-      <div class="wrap pie-inner">
-        <img src="/logo-horizontal.svg" alt="APSILUM" width="132" height="38" />
-        <p>© {anio} XpertAI SAS · Bogotá, Colombia</p>
-        <nav aria-label="Enlaces del pie">
-          <a href={demo} target="_blank" rel="noopener">Solicitar demo</a>
-          <a href={app}>Ingresar</a>
-          <a href="mailto:hola@apsilum.com">hola@apsilum.com</a>
-        </nav>
+      <div class="wrap">
+        <div class="pie-grid">
+          <div class="pie-marca">
+            <img src="/logo-horizontal.svg" alt="APSILUM" width="132" height="38" />
+            <p>
+              El expediente digital del alumbrado público, con el cálculo de la CREG 101 013 de
+              2022.
+            </p>
+            <div class="pie-redes">
+              {
+                redes.map((red) => (
+                  <a href={red.href} target="_blank" rel="noopener" aria-label={red.red} title={red.red}>
+                    {red.icono}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+
+          <nav class="pie-col" aria-label="Producto">
+            <h2>Producto</h2>
+            {producto.map((item) => <a href={item.href}>{item.texto}</a>)}
+          </nav>
+
+          <nav class="pie-col" aria-label="Acceso">
+            <h2>Acceso</h2>
+            {acceso.map((item) => <a href={item.href}>{item.texto}</a>)}
+          </nav>
+
+          <nav class="pie-col" aria-label="XpertAI">
+            <h2>XpertAI</h2>
+            {corporativo.map((item) => <a href={item.href}>{item.texto}</a>)}
+          </nav>
+        </div>
+
+        <div class="pie-legal">
+          <p>© {anio} XpertAI SAS · Bogotá, Colombia · Todos los derechos reservados.</p>
+          <p>Hecho en Cali, Valle del Cauca.</p>
+        </div>
       </div>
     </footer>
   </body>
